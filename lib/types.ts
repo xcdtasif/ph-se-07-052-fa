@@ -186,6 +186,8 @@ export type Payment = {
   currency: string
   status: PaymentStatus
   paidAt: string | null
+  // Set with COMPLETED, e.g. "GL-20261127-AF1B0647"; GET /payments/:id/invoice downloads it
+  invoiceNumber: string | null
   createdAt: string
   updatedAt: string
   application: Pick<Application, "id" | "status"> & {
