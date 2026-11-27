@@ -47,6 +47,13 @@ export type Slot = {
   status: SlotStatus
 }
 
+// GET /schedules: slots on Dhaka days `from` to `to` (YYYY-MM-DD), each with its feeder
+export type Schedule = {
+  from: string
+  to: string
+  slots: (Slot & { feeder: Pick<Feeder, "name" | "code"> })[]
+}
+
 export type Tokens = {
   accessToken: string
   refreshToken: string
