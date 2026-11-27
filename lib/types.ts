@@ -213,3 +213,48 @@ export type Payment = {
 
 // Pay Application Fee: open checkoutUrl to pay on Stripe
 export type Checkout = Payment & { checkoutUrl: string }
+
+/*
+GET /analytics/outages: outages confirmed in a range of Dhaka days (backend
+docs/api-docs/analytics.md). Minutes are whole; averages are null when nothing got that far
+*/
+export type OutageAnalytics = {
+  // null for the whole company (admins only)
+  zone: Pick<Zone, "id" | "name" | "code"> | null
+  from: string
+  to: string
+  outages: {
+    total: number
+    active: number
+    restored: number
+    avgAssignMinutes: number | null
+    avgRestorationMinutes: number | null
+  }
+  byStatus: Record<OutageStatus, number>
+  // Restored outages only
+  byCause: Record<OutageCause, number>
+  // Reports made in the range, by their status now
+  reports: Record<OutageReportStatus, number>
+  // Every day in the range, empty ones included
+  daily: { date: string; outages: number }[]
+  // The 10 areas off longest; an active outage counts until now
+  topAreas: {
+    id: string
+    name: string
+    feederCode: string
+    zoneCode: string
+    outages: number
+    minutesOff: number
+  }[]
+  // Each zone, for the whole company; null for one zone
+  byZone:
+    | {
+        id: string
+        name: string
+        code: string
+        outages: number
+        active: number
+        avgRestorationMinutes: number | null
+      }[]
+    | null
+}
