@@ -160,7 +160,7 @@ export const APPLICATION_STATUSES = [
   "REJECTED",
 ] as const
 
-// PAYMENT_PENDING until the fee is paid, then SUBMITTED for the poster to review
+// PAYMENT_PENDING until the fee is paid, then SUBMITTED for the poster to review; HIRED and REJECTED are final
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number]
 
 export type Application = {
@@ -172,6 +172,22 @@ export type Application = {
   createdAt: string
   updatedAt: string
   jobPosting: Pick<JobPosting, "id" | "title" | "role" | "applicationFee" | "zone">
+}
+
+// What a reviewer lists: paid applications only (backend docs/api-docs/application.md)
+export const REVIEWABLE_STATUSES = ["SUBMITTED", "SHORTLISTED", "HIRED", "REJECTED"] as const
+
+/*
+GET /job-postings/:id/applications and PATCH /applications/:id/status. SUBMITTED can be
+shortlisted or rejected, SHORTLISTED hired or rejected
+*/
+export type ReviewApplication = Omit<Application, "jobPosting"> & {
+  user: { id: string; name: string; email: string }
+  // Who made the last review
+  reviewedBy: { id: string; name: string } | null
+  // The employee row a hire created
+  employee: { id: string; role: EmployeeRole; zoneId: string | null } | null
+  jobPosting: Pick<JobPosting, "id" | "title" | "role" | "vacancies" | "zone">
 }
 
 export const PAYMENT_STATUSES = ["PENDING", "COMPLETED", "FAILED"] as const
