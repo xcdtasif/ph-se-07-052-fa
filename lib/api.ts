@@ -57,6 +57,12 @@ const isApiResponse = (value: unknown): value is ApiResponse<unknown> =>
   "message" in value &&
   typeof value.message === "string"
 
+// Who is calling: the user's token, and the visitor's IP with the secret that makes the backend trust it
+export const authHeaders = (accessToken?: string, clientIp?: string | null) => ({
+  ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+  ...(clientIp ? { "X-Client-IP": clientIp, "X-Frontend-Secret": env.FRONTEND_SECRET } : {}),
+})
+
 /*
 Calls the backend from the server and always resolves to its response envelope.
 A network failure or a non-JSON reply becomes an `ApiFailure`, so callers handle
@@ -77,8 +83,7 @@ export const apiFetch = async <T>(
       headers: {
         // fetch sets a FormData body's multipart type itself, with its boundary
         ...(body === undefined || isForm ? {} : { "Content-Type": "application/json" }),
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        ...(clientIp ? { "X-Client-IP": clientIp, "X-Frontend-Secret": env.FRONTEND_SECRET } : {}),
+        ...authHeaders(accessToken, clientIp),
         ...headers,
       },
       body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),

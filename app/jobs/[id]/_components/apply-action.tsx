@@ -1,20 +1,13 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 
+import { applicationStatusLabel } from "@/components/shared/application-status-badge"
 import { buttonVariants } from "@/components/ui/button"
 import { authFetch, getCurrentUser } from "@/lib/auth-fetch"
-import type { Application, ApplicationStatus, JobPosting } from "@/lib/types"
+import type { Application, JobPosting } from "@/lib/types"
 
 import { ApplyDialog } from "./apply-dialog"
 import { PayButton } from "./pay-button"
-
-const STATUS_LABELS: Record<ApplicationStatus, string> = {
-  PAYMENT_PENDING: "Waiting for the fee",
-  SUBMITTED: "Submitted",
-  SHORTLISTED: "Shortlisted",
-  HIRED: "Hired",
-  REJECTED: "Not selected",
-}
 
 const smallButton = (variant: "default" | "outline" = "default") =>
   buttonVariants({ variant, size: "sm", className: "text-sm" })
@@ -41,7 +34,7 @@ function YourApplication({
     <div className="flex w-full flex-col gap-4">
       <dl className="grid grid-cols-[auto_1fr] gap-x-6 text-sm">
         <dt className="text-muted-foreground">Your application</dt>
-        <dd className="truncate text-right">{STATUS_LABELS[application.status]}</dd>
+        <dd className="truncate text-right">{applicationStatusLabel(application.status)}</dd>
       </dl>
       {/* As the line above it: 1.5rem above, 1rem below */}
       <div className="divider-dashed mt-2 flex flex-col items-center gap-4 pt-4">

@@ -2,7 +2,7 @@ import "server-only"
 import { cacheLife } from "next/cache"
 
 import { apiFetch } from "@/lib/api"
-import type { JobPosting } from "@/lib/types"
+import type { EmployeeRole, JobPosting } from "@/lib/types"
 
 /*
 Public reads, kept for seconds like outages: the backend caches them too and drops its copy on
@@ -23,7 +23,8 @@ export const getJobPosting = async (id: string) => {
   return apiFetch<JobPosting>(`/job-postings/${encodeURIComponent(id)}`)
 }
 
-export const ROLE_LABELS: Record<JobPosting["role"], string> = {
-  TECHNICIAN: "Technician",
+export const ROLE_LABELS: Record<EmployeeRole, string> = {
+  ADMIN: "Admin",
   ZONE_MANAGER: "Zone Manager",
+  TECHNICIAN: "Technician",
 }

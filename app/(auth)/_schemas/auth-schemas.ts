@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { nameSchema } from "@/lib/schemas"
+
 // These mirror the backend rules in docs/api-docs/auth.md
 
 const email = z
@@ -18,11 +20,7 @@ export const loginSchema = z.object({
 })
 
 export const signupSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, { error: "Name must be at least 2 characters" })
-    .max(100, { error: "Name must be at most 100 characters" }),
+  name: nameSchema,
   email,
   // bcrypt reads only the first 72 bytes, so the backend refuses longer passwords
   password: z
