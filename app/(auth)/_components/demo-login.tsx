@@ -23,13 +23,13 @@ type DemoLoginProps = {
 
 /*
 Logs in as a sample user in one click; the clicked button's value names the account. It always
-opens the home page rather than `?redirectTo=`, as the page there may belong to another role
+opens the dashboard rather than `?redirectTo=`, to show what that role can do
 */
 export function DemoLogin({ botCheck }: DemoLoginProps) {
   const router = useRouter()
   const [, formAction, pending] = useFormAction(
     withBotCheckReset(demoLoginAction, botCheck.reset),
-    () => router.push("/"),
+    () => router.push("/dashboard"),
   )
 
   return (
