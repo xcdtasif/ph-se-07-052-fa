@@ -13,6 +13,27 @@ export type User = {
   employee: { id: string; role: EmployeeRole; zoneId: string | null } | null
 }
 
+// The grid (backend docs/api-docs/grid.md): a zone has feeders, a feeder supplies areas
+export type Zone = {
+  id: string
+  name: string
+  code: string
+}
+
+export type Feeder = {
+  id: string
+  zoneId: string
+  name: string
+  code: string
+}
+
+// What GET /areas returns: the area with its feeder and zone
+export type Area = {
+  id: string
+  name: string
+  feeder: Omit<Feeder, "zoneId"> & { zone: Zone }
+}
+
 export type Tokens = {
   accessToken: string
   refreshToken: string
