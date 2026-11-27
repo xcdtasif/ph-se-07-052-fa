@@ -258,3 +258,78 @@ export type OutageAnalytics = {
       }[]
     | null
 }
+
+// GET /admin/payments: every payment, with who paid (backend docs/api-docs/payment.md)
+export type AdminPayment = Omit<Payment, "application"> & {
+  application: Payment["application"] & { user: { id: string; name: string; email: string } }
+}
+
+// GET /admin/stats: the company as it stands now (backend docs/api-docs/admin.md)
+export type AdminStats = {
+  users: {
+    total: number
+    banned: number
+    // Users with a customer profile
+    customers: number
+    // Active employees by role
+    technicians: number
+    zoneManagers: number
+    admins: number
+  }
+  // Not deleted
+  grid: { zones: number; feeders: number; areas: number }
+  // active: not restored yet
+  outages: { active: number; byStatus: Record<OutageStatus, number> }
+  reports: Record<OutageReportStatus, number>
+  // openPostings: still taking applications
+  hiring: { openPostings: number; applications: Record<ApplicationStatus, number> }
+  // collected: whole taka from completed payments
+  payments: { byStatus: Record<PaymentStatus, number>; collected: number }
+}
+
+export const AUDIT_ACTIONS = [
+  "USER_BANNED",
+  "USER_UNBANNED",
+  "ZONE_DELETED",
+  "FEEDER_DELETED",
+  "AREA_DELETED",
+  "SLOT_CANCELLED",
+  "SCHEDULE_DAY_CONFIRMED",
+  "OUTAGE_CONFIRMED",
+  "OUTAGE_ASSIGNED",
+  "OUTAGE_STATUS_CHANGED",
+  "EMPLOYMENT_ENDED",
+  "PAYMENT_COMPLETED",
+  "APPLICATION_STATUS_CHANGED",
+  "EMPLOYEE_HIRED",
+] as const
+
+export type AuditAction = (typeof AUDIT_ACTIONS)[number]
+
+export const AUDIT_ENTITY_TYPES = [
+  "USER",
+  "ZONE",
+  "FEEDER",
+  "AREA",
+  "SLOT",
+  "OUTAGE",
+  "EMPLOYEE",
+  "PAYMENT",
+  "APPLICATION",
+] as const
+
+export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number]
+
+// GET /admin/audit-logs: one critical action, written with the change it records
+export type AuditLog = {
+  id: string
+  action: AuditAction
+  entityType: AuditEntityType
+  entityId: string
+  // The fields that changed; null when there's nothing to show
+  before: Record<string, unknown> | null
+  after: Record<string, unknown> | null
+  createdAt: string
+  // null when the system acted, e.g. Stripe's webhook
+  actor: { id: string; name: string; email: string } | null
+}
