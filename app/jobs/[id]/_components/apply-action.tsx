@@ -1,8 +1,6 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 
-import { PILL_COLORS } from "@/components/shared/pill-colors"
-import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { authFetch, getCurrentUser } from "@/lib/auth-fetch"
 import type { Application, ApplicationStatus, JobPosting } from "@/lib/types"
@@ -10,12 +8,12 @@ import type { Application, ApplicationStatus, JobPosting } from "@/lib/types"
 import { ApplyDialog } from "./apply-dialog"
 import { PayButton } from "./pay-button"
 
-const STATUSES: Record<ApplicationStatus, { label: string; className: string }> = {
-  PAYMENT_PENDING: { label: "Waiting for the fee", className: PILL_COLORS.amber },
-  SUBMITTED: { label: "Submitted", className: PILL_COLORS.blue },
-  SHORTLISTED: { label: "Shortlisted", className: PILL_COLORS.violet },
-  HIRED: { label: "Hired", className: PILL_COLORS.emerald },
-  REJECTED: { label: "Not selected", className: PILL_COLORS.gray },
+const STATUS_LABELS: Record<ApplicationStatus, string> = {
+  PAYMENT_PENDING: "Waiting for the fee",
+  SUBMITTED: "Submitted",
+  SHORTLISTED: "Shortlisted",
+  HIRED: "Hired",
+  REJECTED: "Not selected",
 }
 
 const smallButton = (variant: "default" | "outline" = "default") =>
@@ -26,7 +24,10 @@ const Note = ({ children }: { children: ReactNode }) => (
   <p className="text-muted-foreground flex min-h-7 items-center text-center text-sm">{children}</p>
 )
 
-// The user's application: its status, their CV, and the fee while it's unpaid
+/*
+The user's application: its status as one more row of the details above, then, below a second
+line, their CV and, while it's unpaid, the fee
+*/
 function YourApplication({
   application,
   posting,
@@ -34,30 +35,32 @@ function YourApplication({
   application: Application
   posting: JobPosting
 }) {
-  const { label, className } = STATUSES[application.status]
   const unpaid = application.status === "PAYMENT_PENDING"
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <p className="flex items-center gap-2 text-sm">
-        Your application
-        <Badge className={className}>{label}</Badge>
-      </p>
-      {unpaid && posting.status === "CLOSED" && (
-        <Note>The posting closed before the fee was paid.</Note>
-      )}
-      <div className="flex gap-2">
-        <a
-          href={application.cvUrl}
-          target="_blank"
-          rel="noreferrer"
-          className={smallButton("outline")}
-        >
-          View CV
-        </a>
-        {unpaid && posting.status === "OPEN" && (
-          <PayButton applicationId={application.id} fee={posting.applicationFee} />
+    <div className="flex w-full flex-col gap-4">
+      <dl className="grid grid-cols-[auto_1fr] gap-x-6 text-sm">
+        <dt className="text-muted-foreground">Your application</dt>
+        <dd className="truncate text-right">{STATUS_LABELS[application.status]}</dd>
+      </dl>
+      {/* As the line above it: 1.5rem above, 1rem below */}
+      <div className="divider-dashed mt-2 flex flex-col items-center gap-4 pt-4">
+        {unpaid && posting.status === "CLOSED" && (
+          <Note>The posting closed before the fee was paid</Note>
         )}
+        <div className="flex gap-2">
+          <a
+            href={application.cvUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={smallButton("outline")}
+          >
+            View CV
+          </a>
+          {unpaid && posting.status === "OPEN" && (
+            <PayButton applicationId={application.id} fee={posting.applicationFee} />
+          )}
+        </div>
       </div>
     </div>
   )
