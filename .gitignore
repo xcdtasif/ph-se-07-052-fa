@@ -44,4 +44,5 @@ _inbox
 _ph
 .fallow
 
+!.env.example
 AGENTS.md
