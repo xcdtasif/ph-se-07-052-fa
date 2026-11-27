@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
+import { AuthLink } from "@/components/shared/auth-link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 import { SignupFlow } from "../_components/signup-flow"
@@ -18,9 +18,9 @@ export default function SignupPage() {
         </CardTitle>
         <CardDescription>
           Already have an account?{" "}
-          <Link href="/login" className="text-foreground link-underline">
+          <AuthLink href="/login" className="text-foreground link-underline">
             Log in
-          </Link>
+          </AuthLink>
         </CardDescription>
       </CardHeader>
       <CardContent>

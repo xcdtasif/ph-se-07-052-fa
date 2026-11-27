@@ -2,6 +2,7 @@ import { CircleSlash } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
 
+import { PageHeader } from "@/components/shared/page-header"
 import { buttonVariants } from "@/components/ui/button"
 
 import { PaymentNote, PaymentOutcome } from "../_components/payment-outcome"
@@ -17,13 +18,13 @@ page's Pay button returns to it until it expires
 export default function PaymentCancelPage() {
   return (
     <section className="mx-auto flex w-full max-w-lg flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Payment</h1>
+      <PageHeader title="Payment" />
       <PaymentOutcome
         icon={CircleSlash}
         iconClassName="text-muted-foreground"
         title="Payment cancelled"
         action={
-          <Link href="/jobs" className={buttonVariants({ size: "sm" })}>
+          <Link href="/jobs" className={buttonVariants({ size: "sm", className: "text-sm" })}>
             View jobs
           </Link>
         }

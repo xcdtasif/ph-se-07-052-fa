@@ -16,7 +16,7 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZ
 // A calendar date from the backend, like "2026-12-18", as "18 Dec 2026"
 export const formatDate = (date: string) => dateFormat.format(new Date(`${date}T00:00:00Z`))
 
-const takaFormat = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 })
+const bdtFormat = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 })
 
-// Whole taka, like "৳1,000"
-export const formatTaka = (amount: number) => `৳${takaFormat.format(amount)}`
+// Whole taka, like "BDT 1,000"; the ৳ sign isn't in Geist, so its fallback font varies by browser
+export const formatBdt = (amount: number) => `BDT ${bdtFormat.format(amount)}`

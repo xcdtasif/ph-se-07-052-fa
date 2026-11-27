@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useFormAction } from "@/hooks/use-form-action"
-import { formatTaka } from "@/lib/format"
+import { formatBdt } from "@/lib/format"
 
 import { payAction } from "../_actions/application-actions"
 
@@ -11,8 +11,8 @@ export function PayButton({ applicationId, fee }: { applicationId: string; fee: 
 
   return (
     <form action={formAction}>
-      <Button type="submit" disabled={pending} className="w-full">
-        {pending ? "Opening payment…" : `Pay ${formatTaka(fee)}`}
+      <Button type="submit" size="sm" disabled={pending} className="text-sm">
+        {pending ? "Opening payment…" : `Pay ${formatBdt(fee)}`}
       </Button>
     </form>
   )
