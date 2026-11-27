@@ -1,5 +1,19 @@
 import type { ApiFailure } from "@/lib/api"
 
+/*
+Spread on every input outside the login and signup forms, so password managers (Proton Pass,
+1Password, LastPass, Bitwarden, Dashlane) and the browser don't offer to fill it or save it as a
+login, e.g. the phone number on a job application
+*/
+export const NO_AUTOFILL = {
+  autoComplete: "off",
+  "data-protonpass-ignore": "",
+  "data-1p-ignore": "",
+  "data-lpignore": "true",
+  "data-bwignore": "",
+  "data-form-type": "other",
+} as const
+
 // What a form's server action returns to the form
 export type FormState<Field extends string> = {
   success: boolean

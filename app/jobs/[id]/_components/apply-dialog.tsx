@@ -14,6 +14,7 @@ import {
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useFormAction } from "@/hooks/use-form-action"
+import { NO_AUTOFILL } from "@/lib/form"
 import { formatBdt } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
@@ -72,7 +73,7 @@ export function ApplyDialog({ jobPostingId, title, fee }: ApplyDialogProps) {
                 id="phone"
                 name="phone"
                 type="tel"
-                autoComplete="tel"
+                {...NO_AUTOFILL}
                 placeholder="01712345678"
                 defaultValue={state.values?.phone}
                 aria-invalid={Boolean(errors?.phone)}
@@ -94,6 +95,7 @@ export function ApplyDialog({ jobPostingId, title, fee }: ApplyDialogProps) {
                 name="cv"
                 type="file"
                 accept="application/pdf"
+                {...NO_AUTOFILL}
                 aria-invalid={Boolean(errors?.cv)}
                 onChange={(event) => setFileName(event.target.files?.[0]?.name ?? null)}
                 className="peer sr-only"
