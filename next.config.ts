@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
   },
   cacheComponents: true,
+  // The dev server refuses its scripts to other hostnames; omarchy is this machine on Tailscale
+  allowedDevOrigins: ["omarchy"],
   partialPrefetching: true,
   turbopack: {
     rules: {

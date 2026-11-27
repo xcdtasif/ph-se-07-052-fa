@@ -1,26 +1,226 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  /* Hover and pill grey, a clear step below the 0.98 page */
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.48 0 0);
+  --accent: oklch(0.96 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  /* Light grey, so white cards (--card) stand out from the page */
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.145 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/*
+Toasts in the pills' hues and in both themes alike: the popover colour tinted 20% with the
+type's hue, a 45% border and the hue's text, dark (800) in light mode and light (300) in dark,
+like the pills. Sonner's own dark colours are near-black tints that vanish on the dark page.
+The extra :root and [data-sonner-theme] outrank Sonner's rules, which it adds to <head> at
+runtime
+*/
+:root [data-sonner-toaster][data-sonner-theme] {
+  --success-bg: color-mix(in oklch, var(--color-emerald-400) 20%, var(--popover));
+  --success-border: color-mix(in oklch, var(--color-emerald-400) 45%, var(--popover));
+  --success-text: var(--color-emerald-800);
+  --info-bg: color-mix(in oklch, var(--color-blue-400) 20%, var(--popover));
+  --info-border: color-mix(in oklch, var(--color-blue-400) 45%, var(--popover));
+  --info-text: var(--color-blue-800);
+  --warning-bg: color-mix(in oklch, var(--color-amber-400) 20%, var(--popover));
+  --warning-border: color-mix(in oklch, var(--color-amber-400) 45%, var(--popover));
+  --warning-text: var(--color-amber-800);
+  --error-bg: color-mix(in oklch, var(--color-red-400) 20%, var(--popover));
+  --error-border: color-mix(in oklch, var(--color-red-400) 45%, var(--popover));
+  --error-text: var(--color-red-800);
+}
+
+:root [data-sonner-toaster][data-sonner-theme="dark"] {
+  --success-text: var(--color-emerald-300);
+  --info-text: var(--color-blue-300);
+  --warning-text: var(--color-amber-300);
+  --error-text: var(--color-red-300);
+}
+
+/*
+The dashed line above a footer: the rent card's note, request card actions, the page footer.
+@apply, because `@theme inline` doesn't output --color-* variables to read with var().
+*/
+@utility divider-dashed {
+  @apply border-foreground/25 border-t border-dashed;
+}
+
+/*
+A loading placeholder. A light tint of the text colour, a little darker than the page and the
+muted grey, so it shows on the page and on white cards alike.
+*/
+@utility skeleton {
+  @apply bg-foreground/5 animate-pulse;
+}
+
+/*
+An empty list's or a failed read's message box: on the page background, unlike a card, with a
+dashed border as dark as divider-dashed so it shows against the grey page. All its text is
+muted, headings included
+*/
+@utility empty-state {
+  @apply border-foreground/25 text-muted-foreground rounded-xl border border-dashed p-8 text-center;
+}
+
+/* An inline text link: a grey underline that darkens on hover */
+@utility link-underline {
+  @apply decoration-muted-foreground/60 hover:decoration-foreground underline underline-offset-4;
+}
+
+/* A title link: the same grey underline, shown only on hover */
+@utility link-hover-underline {
+  @apply decoration-muted-foreground/60 underline-offset-4 hover:underline;
+}
+
+/*
+For the element that holds a list's cards and, below them, its page links. While a page link,
+a status pill or a filter loads the next cards, the element fades (data-pending, set through
+useFadeWhilePending in scroll-link.tsx; after a short delay so an instant swap doesn't
+flicker). After a page link it then scrolls so its first card sits one card gap below the
+navbar. N is the list's gap between cards (gap-N). The page's scroll
+padding already leaves room for the navbar plus main's 2rem top padding, so the margin swaps
+that 2rem for the gap. A page too short to scroll that far stops at its bottom.
+*/
+@utility jump-target-* {
+  scroll-margin-top: calc(--spacing(--value(integer)) - 2rem);
+  transition: opacity 150ms;
+
+  &[data-pending] {
+    opacity: 0.5;
+    transition-delay: 150ms;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  /*
+  After a client navigation Next scrolls the new page's first element into view,
+  which skips the sticky navbar and lands under it. Offsetting by the navbar
+  (3.5rem + 1px border) and main's top padding (2rem) lands at the very top.
+  Applies to #hash jumps too.
+  */
+  html {
+    @apply font-sans;
+    scroll-padding-top: calc(3.5rem + 1px + 2rem);
+  }
 }
