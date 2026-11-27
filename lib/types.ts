@@ -173,3 +173,25 @@ export type Application = {
   updatedAt: string
   jobPosting: Pick<JobPosting, "id" | "title" | "role" | "applicationFee" | "zone">
 }
+
+export const PAYMENT_STATUSES = ["PENDING", "COMPLETED", "FAILED"] as const
+
+// Only Stripe's webhook changes it; FAILED means the checkout expired unpaid
+export type PaymentStatus = (typeof PAYMENT_STATUSES)[number]
+
+export type Payment = {
+  id: string
+  // Whole taka
+  amount: number
+  currency: string
+  status: PaymentStatus
+  paidAt: string | null
+  createdAt: string
+  updatedAt: string
+  application: Pick<Application, "id" | "status"> & {
+    jobPosting: Pick<JobPosting, "id" | "title" | "role" | "zone">
+  }
+}
+
+// Pay Application Fee: open checkoutUrl to pay on Stripe
+export type Checkout = Payment & { checkoutUrl: string }
