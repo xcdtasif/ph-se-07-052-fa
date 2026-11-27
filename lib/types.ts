@@ -82,11 +82,26 @@ export const OUTAGE_STATUSES = ["CONFIRMED", "ASSIGNED", "IN_PROGRESS", "RESTORE
 
 export type OutageStatus = (typeof OUTAGE_STATUSES)[number]
 
+// Set by the technician; required to restore
+export const OUTAGE_CAUSES = [
+  "TRANSFORMER_FAULT",
+  "CABLE_DAMAGE",
+  "EMERGENCY_MAINTENANCE",
+  "TEMPORARY_TRIP",
+  "OTHER",
+] as const
+
+export type OutageCause = (typeof OUTAGE_CAUSES)[number]
+
 export type Outage = {
   id: string
   status: OutageStatus
+  cause: OutageCause | null
   note: string | null
   confirmedAt: string
+  assignedAt: string | null
+  startedAt: string | null
+  restoredAt: string | null
   updatedAt: string
   zone: Pick<Zone, "id" | "name">
   areas: (Pick<Area, "id" | "name"> & { feeder: Pick<Feeder, "id" | "name" | "code"> })[]
@@ -100,3 +115,16 @@ export type Tokens = {
 
 // What logging in, signing up and refreshing return
 export type Session = Tokens & { user: User }
+
+// An active employment, as GET /employees lists it (backend docs/api-docs/employee.md)
+export type Employee = {
+  id: string
+  role: EmployeeRole
+  createdAt: string
+  endedAt: string | null
+  // null for an admin
+  zone: Zone | null
+  user: { id: string; name: string; email: string }
+  // The technician's assigned or in-progress outage
+  activeJob: { id: string; status: OutageStatus } | null
+}
