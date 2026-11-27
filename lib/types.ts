@@ -34,6 +34,19 @@ export type Area = {
   feeder: Omit<Feeder, "zoneId"> & { zone: Zone }
 }
 
+// A planned power cut on one feeder (backend docs/api-docs/schedule.md). Times are UTC ISO strings
+export const SLOT_STATUSES = ["TENTATIVE", "CONFIRMED", "CANCELLED"] as const
+
+export type SlotStatus = (typeof SLOT_STATUSES)[number]
+
+export type Slot = {
+  id: string
+  feederId: string
+  startsAt: string
+  endsAt: string
+  status: SlotStatus
+}
+
 export type Tokens = {
   accessToken: string
   refreshToken: string
