@@ -6,12 +6,16 @@ import { safeRedirectPath } from "@/lib/redirect"
 import type { Session, User } from "@/lib/types"
 
 /*
-Keeps the session going and sends logged-in users away from the login and signup pages. It reads
-the access token's expiry without verifying it (the secret stays on the backend), so it only
-decides when to refresh and where to send the user. The backend still checks every request.
+Keeps the session going, sends logged-in users away from the login and signup pages and logged-out
+ones from the dashboard to log in. It reads the access token's expiry without verifying it (the
+secret stays on the backend), so it only decides when to refresh and where to send the user. The
+backend still checks every request, a role's pages included.
 */
 
 const GUEST_ONLY_ROUTES = ["/login", "/signup"]
+
+// Pages for logged-in users; the status emails link to /dashboard
+const PROTECTED_ROUTES = ["/dashboard", "/profile"]
 
 // Refresh a little early so the token doesn't expire while the page renders
 const EXPIRY_MARGIN_MS = 10_000
@@ -29,6 +33,8 @@ const matches = (pathname: string, prefix: string) =>
 
 const isGuestOnly = (pathname: string) =>
   GUEST_ONLY_ROUTES.some((route) => matches(pathname, route))
+
+const isProtected = (pathname: string) => PROTECTED_ROUTES.some((route) => matches(pathname, route))
 
 const isUnexpired = (token: string) =>
   (tokenExpiry(token)?.getTime() ?? 0) > Date.now() + EXPIRY_MARGIN_MS
@@ -97,9 +103,26 @@ const readSession = async (request: NextRequest): Promise<SessionState> => {
   return { loggedIn: false }
 }
 
+// Where to send the user instead of the requested page, or null to let them in
+const redirectFor = (request: NextRequest, loggedIn: boolean): URL | null => {
+  const { pathname, search, searchParams } = request.nextUrl
+
+  if (loggedIn && isGuestOnly(pathname)) {
+    return new URL(safeRedirectPath(searchParams.get("redirectTo")), request.url)
+  }
+
+  if (!loggedIn && isProtected(pathname)) {
+    const loginUrl = new URL("/login", request.url)
+    loginUrl.searchParams.set("redirectTo", `${pathname}${search}`)
+
+    return loginUrl
+  }
+
+  return null
+}
+
 export async function proxy(request: NextRequest) {
   const { loggedIn, refreshed, cleared } = await readSession(request)
-  const { pathname, searchParams } = request.nextUrl
 
   // Update the request's cookies too, so this render already uses the new tokens
   for (const { name, value } of refreshed ?? []) {
@@ -112,12 +135,10 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  const response =
-    loggedIn && isGuestOnly(pathname)
-      ? NextResponse.redirect(
-          new URL(safeRedirectPath(searchParams.get("redirectTo")), request.url),
-        )
-      : NextResponse.next({ request: { headers: request.headers } })
+  const redirectUrl = redirectFor(request, loggedIn)
+  const response = redirectUrl
+    ? NextResponse.redirect(redirectUrl)
+    : NextResponse.next({ request: { headers: request.headers } })
 
   for (const { name, value, options } of refreshed ?? []) {
     response.cookies.set(name, value, options)

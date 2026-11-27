@@ -119,17 +119,27 @@ export function MobileMenu({ loggedIn }: { loggedIn: boolean }) {
               className="flex flex-1 flex-col items-center justify-center gap-3"
             >
               {menuLink("/jobs", "Jobs")}
+              {loggedIn && menuLink("/dashboard", "Dashboard")}
             </nav>
             <div className="divider-dashed flex flex-col gap-2 pt-6">
               {loggedIn ? (
-                <Button
-                  onClick={() => {
-                    logoutNext.current = true
-                    close()
-                  }}
-                >
-                  Log out
-                </Button>
+                <>
+                  <Button
+                    onClick={() => {
+                      logoutNext.current = true
+                      close()
+                    }}
+                  >
+                    Log out
+                  </Button>
+                  <Link
+                    href="/profile"
+                    onClick={close}
+                    className={buttonVariants({ variant: "outline" })}
+                  >
+                    Profile
+                  </Link>
+                </>
               ) : (
                 <>
                   <AuthLink href="/login" onClick={close} className={buttonVariants()}>

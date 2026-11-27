@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Suspense } from "react"
 
 import { buttonVariants } from "@/components/ui/button"
@@ -15,19 +16,26 @@ async function readLoggedIn(): Promise<boolean> {
   return (await getCurrentUser()).success
 }
 
-// Desktop: the public pages; Dashboard joins them once the dashboards exist
-function NavbarLinks() {
+// Desktop: Jobs, then Dashboard once logged in
+async function NavbarLinks() {
+  const loggedIn = await readLoggedIn()
+
   return (
     <ul className="flex items-center gap-1">
       <li>
         <NavLink href="/jobs">Jobs</NavLink>
       </li>
+      {loggedIn && (
+        <li>
+          <NavLink href="/dashboard">Dashboard</NavLink>
+        </li>
+      )}
     </ul>
   )
 }
 
 /*
-Desktop: the theme toggle, then Log out, or Sign up and Log in. The toggle waits with
+Desktop: the theme toggle, then Profile and Log out, or Sign up and Log in. The toggle waits with
 the buttons, so it appears where it stays instead of moving once they replace their placeholder
 */
 async function NavbarAccount() {
@@ -36,6 +44,9 @@ async function NavbarAccount() {
   return loggedIn ? (
     <>
       <ThemeToggle />
+      <Link href="/profile" className={buttonVariants({ variant: "outline" })}>
+        Profile
+      </Link>
       <LogoutButton />
     </>
   ) : (
@@ -69,11 +80,14 @@ export function Navbar() {
         className="mx-auto flex h-14 w-full max-w-6xl items-center gap-2 px-4 lg:grid lg:grid-cols-[1fr_auto_1fr]"
       >
         <HomeLink className="justify-self-start text-lg font-semibold" />
+        {/* One skeleton for both links while the session loads */}
         <div className="hidden lg:block">
-          <NavbarLinks />
+          <Suspense fallback={<div className="skeleton h-8 w-44 rounded-lg" aria-hidden="true" />}>
+            <NavbarLinks />
+          </Suspense>
         </div>
         <div className="hidden items-center gap-2 justify-self-end lg:flex">
-          {/* As wide as a guest's toggle and buttons, 181px */}
+          {/* As wide as the toggle and buttons: 184px logged in, 181px for a guest */}
           <Suspense fallback={<div className="skeleton h-8 w-46 rounded-lg" aria-hidden="true" />}>
             <NavbarAccount />
           </Suspense>
