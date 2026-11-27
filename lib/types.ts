@@ -54,6 +54,27 @@ export type Schedule = {
   slots: (Slot & { feeder: Pick<Feeder, "name" | "code"> })[]
 }
 
+export const OUTAGE_REPORT_STATUSES = ["PENDING", "LINKED", "DISMISSED"] as const
+
+export type OutageReportStatus = (typeof OUTAGE_REPORT_STATUSES)[number]
+
+// What a customer sees of their own report
+export type OutageReport = {
+  id: string
+  status: OutageReportStatus
+  description: string | null
+  dismissReason: string | null
+  createdAt: string
+  updatedAt: string
+  area: Pick<Area, "id" | "name">
+}
+
+// What a Zone Manager sees: the area's feeder and who reported
+export type ZoneOutageReport = Omit<OutageReport, "area"> & {
+  area: Pick<Area, "id" | "name"> & { feeder: Pick<Feeder, "id" | "name" | "code"> }
+  customer: { meterNumber: string | null; user: { name: string } }
+}
+
 export type Tokens = {
   accessToken: string
   refreshToken: string
