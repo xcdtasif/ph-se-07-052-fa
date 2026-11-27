@@ -151,3 +151,25 @@ export type JobPosting = {
   updatedAt: string
   zone: Pick<Zone, "id" | "name" | "code">
 }
+
+export const APPLICATION_STATUSES = [
+  "PAYMENT_PENDING",
+  "SUBMITTED",
+  "SHORTLISTED",
+  "HIRED",
+  "REJECTED",
+] as const
+
+// PAYMENT_PENDING until the fee is paid, then SUBMITTED for the poster to review
+export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number]
+
+export type Application = {
+  id: string
+  status: ApplicationStatus
+  phone: string
+  // The CV, a PDF on Cloudinary
+  cvUrl: string
+  createdAt: string
+  updatedAt: string
+  jobPosting: Pick<JobPosting, "id" | "title" | "role" | "applicationFee" | "zone">
+}
