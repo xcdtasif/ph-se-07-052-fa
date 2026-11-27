@@ -104,6 +104,7 @@ function VerifyEmailForm({ email, onBack }: { email: string; onBack: () => void 
 
         <Field data-invalid={Boolean(errors?.otp)}>
           <FieldLabel htmlFor="otp">Verification code</FieldLabel>
+          <FieldDescription>6-digit code sent to {email}</FieldDescription>
           <Input
             id="otp"
             name="otp"
@@ -113,7 +114,6 @@ function VerifyEmailForm({ email, onBack }: { email: string; onBack: () => void 
             aria-invalid={Boolean(errors?.otp)}
             required
           />
-          <FieldDescription>Enter the 6-digit code sent to {email}</FieldDescription>
           <FieldError errors={toErrors(errors?.otp)} />
         </Field>
 

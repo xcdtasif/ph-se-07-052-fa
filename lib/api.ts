@@ -34,7 +34,7 @@ export type ApiFailure = {
 export type ApiResponse<T> = ApiSuccess<T> | ApiFailure
 
 export type ApiFetchOptions = Omit<RequestInit, "body"> & {
-  // Sent as JSON
+  // FormData is sent as multipart/form-data (e.g. a file upload); anything else as JSON
   body?: unknown
   // Sent as a Bearer token
   accessToken?: string
@@ -69,17 +69,19 @@ export const apiFetch = async <T>(
   { body, headers, accessToken, clientIp, ...init }: ApiFetchOptions = {},
 ): Promise<ApiResponse<T>> => {
   let res: Response
+  const isForm = body instanceof FormData
 
   try {
     res = await fetch(`${env.API_URL}${path}`, {
       ...init,
       headers: {
-        ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+        // fetch sets a FormData body's multipart type itself, with its boundary
+        ...(body === undefined || isForm ? {} : { "Content-Type": "application/json" }),
         ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...(clientIp ? { "X-Client-IP": clientIp, "X-Frontend-Secret": env.FRONTEND_SECRET } : {}),
         ...headers,
       },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     })
   } catch (error) {
     /*

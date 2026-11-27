@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
     agentFeedback: true,
+    // A job application's CV (2 MB at most) goes through a server action, plus the form's overhead
+    serverActions: {
+      bodySizeLimit: "3mb",
+    },
   },
   cacheComponents: true,
   // The dev server refuses its scripts to other hostnames; omarchy is this machine on Tailscale
