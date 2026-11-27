@@ -7,7 +7,9 @@ export type User = {
   id: string
   name: string
   email: string
-  // The active job at the company; null for a customer. zoneId is null for an admin
+  // The electricity connection; null until the user creates one
+  customer: { id: string; areaId: string; meterNumber: string | null } | null
+  // The active job at the company; null for a non-employee. zoneId is null for an admin
   employee: { id: string; role: EmployeeRole; zoneId: string | null } | null
 }
 
