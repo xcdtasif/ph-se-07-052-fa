@@ -64,6 +64,8 @@ export type OutageReport = {
   status: OutageReportStatus
   description: string | null
   dismissReason: string | null
+  // Set when LINKED; the status page is /outages/:outageId
+  outageId: string | null
   createdAt: string
   updatedAt: string
   area: Pick<Area, "id" | "name">
@@ -73,6 +75,22 @@ export type OutageReport = {
 export type ZoneOutageReport = Omit<OutageReport, "area"> & {
   area: Pick<Area, "id" | "name"> & { feeder: Pick<Feeder, "id" | "name" | "code"> }
   customer: { meterNumber: string | null; user: { name: string } }
+}
+
+// An unplanned power cut, as the public status page shows it (backend docs/api-docs/outage.md)
+export const OUTAGE_STATUSES = ["CONFIRMED", "ASSIGNED", "IN_PROGRESS", "RESTORED"] as const
+
+export type OutageStatus = (typeof OUTAGE_STATUSES)[number]
+
+export type Outage = {
+  id: string
+  status: OutageStatus
+  note: string | null
+  confirmedAt: string
+  updatedAt: string
+  zone: Pick<Zone, "id" | "name">
+  areas: (Pick<Area, "id" | "name"> & { feeder: Pick<Feeder, "id" | "name" | "code"> })[]
+  reportCount: number
 }
 
 export type Tokens = {
