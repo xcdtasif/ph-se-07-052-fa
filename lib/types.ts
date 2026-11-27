@@ -128,3 +128,26 @@ export type Employee = {
   // The technician's assigned or in-progress outage
   activeJob: { id: string; status: OutageStatus } | null
 }
+
+// A job opening in one zone (backend docs/api-docs/job-posting.md)
+export const JOB_POSTING_STATUSES = ["OPEN", "CLOSED"] as const
+
+// CLOSED also once the deadline day has ended in Dhaka
+export type JobPostingStatus = (typeof JOB_POSTING_STATUSES)[number]
+
+export type JobPosting = {
+  id: string
+  // Zone Managers post TECHNICIAN jobs, admins ZONE_MANAGER jobs
+  role: Exclude<EmployeeRole, "ADMIN">
+  title: string
+  description: string
+  vacancies: number
+  // Whole taka
+  applicationFee: number
+  // The last day to apply, e.g. "2026-12-31" (Dhaka)
+  deadline: string
+  status: JobPostingStatus
+  createdAt: string
+  updatedAt: string
+  zone: Pick<Zone, "id" | "name" | "code">
+}
